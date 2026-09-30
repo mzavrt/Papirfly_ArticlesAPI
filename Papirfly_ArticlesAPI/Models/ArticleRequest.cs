@@ -22,13 +22,15 @@ namespace Papirfly_ArticlesAPI.Models
         [JsonPropertyName("currency")]
         public string? Currency { get; init; }
 
-        public Article ToArticle() => new()
+        public Article ToArticle() => new Article
         {
             Name = Name,
             Description = Description,
             Category = Category,
             Price = Price,
-            Currency = string.IsNullOrWhiteSpace(Currency) ? null : Currency
+            Currency = string.IsNullOrWhiteSpace(Currency) ? null : Currency,
+            ArticleId = 0,     
+            Version = 0         
         };
     }
 }

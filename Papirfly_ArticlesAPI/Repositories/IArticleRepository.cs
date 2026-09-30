@@ -5,6 +5,8 @@ namespace Papirfly_ArticlesAPI.Repositories
     public interface IArticleRepository
     {
         Article Add(Article article);
+
+        IReadOnlyList<Article> AddMany(IEnumerable<Article> articles);
         Article? Get(int id);
         IReadOnlyList<Article> Search(string? name, string? category);
 

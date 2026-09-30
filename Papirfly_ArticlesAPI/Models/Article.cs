@@ -12,4 +12,5 @@ namespace Papirfly_ArticlesAPI.Models
         public string? Currency { get; init; }
         public int Version { get; init; }
     }
+
 }

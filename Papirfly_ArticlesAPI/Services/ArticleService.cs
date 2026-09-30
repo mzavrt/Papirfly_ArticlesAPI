@@ -15,13 +15,14 @@ namespace Papirfly_ArticlesAPI.Services
 
         public IReadOnlyList<Article> Search(string? name, string? category) => repository.Search(name, category);
 
-        // Vloží víc článků souběžně (Parallel.For = víc vláken najednou).
-        // Výsledky jsou ve stejném pořadí jako vstup, ale ID se přidělují podle toho, které vlákno doběhne dřív.
-        public Article[] CreateMany(IReadOnlyList<ArticleRequest> requests)
+
+        public IReadOnlyList<Article> CreateMany(IReadOnlyList<ArticleRequest> requests)
         {
-            var results = new Article[requests.Count];
-            Parallel.For(0, requests.Count, i => results[i] = repository.Add(requests[i].ToArticle()));
-            return results;
+            var articles = requests
+                .Select(r => r.ToArticle())
+                .ToList();
+
+            return repository.AddMany(articles);
         }
 
         public UpdateResult Update(int id, ArticleRequest request, int? expectedVersion)

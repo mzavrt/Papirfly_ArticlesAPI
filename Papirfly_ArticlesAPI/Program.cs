@@ -1,6 +1,8 @@
-using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
+using Papirfly_ArticlesAPI.Data;
 using Papirfly_ArticlesAPI.Repositories;
 using Papirfly_ArticlesAPI.Services;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,8 +16,10 @@ builder.Services
          o.JsonSerializerOptions.NumberHandling = JsonNumberHandling.Strict;
      });
 
-// Singleton = one instance for the whole application lifetime. InMemoryArticleRepository is thread-safe, so it's safe to use as a singleton.
-builder.Services.AddSingleton<IArticleRepository, InMemoryArticleRepository>();
+builder.Services.AddDbContext<ArticlesDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<IArticleRepository, SqlArticleRepository>();
 // Scoped = one instance per request. ArticleService is not thread-safe, so we need a new instance for each request.
 builder.Services.AddScoped<ArticleService>();
 builder.Services.AddOpenApi();
