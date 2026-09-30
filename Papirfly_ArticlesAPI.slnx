@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Papirfly_ArticlesAPI.Tests/Papirfly_ArticlesAPI.Tests.csproj" />
+  <Project Path="Papirfly_ArticlesAPI/Papirfly_ArticlesAPI.csproj" />
+</Solution>

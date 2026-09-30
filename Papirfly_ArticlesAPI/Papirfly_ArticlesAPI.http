@@ -1,0 +1,94 @@
+@host = http://localhost:5047
+
+### 1. Expecting 200 and article_id 1
+POST {{host}}/api/articles
+Content-Type: application/json
+
+{ "name": "Branded Memory Stick", "description": "Branded 16 GB memory stick", "category": "USB flash drive", "price": 17.89, "currency": "NOK" }
+
+### 2. Expecting 200, without currency in response
+POST {{host}}/api/articles
+Content-Type: application/json
+
+{ "name": "Branded Drinking Mug", "description": "Porcelain drinking cup with your logo on it.", "category": "Mug", "price": 0 }
+
+### 3. Expecting 400 (missing currency)
+POST {{host}}/api/articles
+Content-Type: application/json
+
+{ "name": "Branded Memory Stick", "description": "Branded 16 GB memory stick", "category": "USB flash drive", "price": 17.89 }
+
+### 4. Expecting 400 (price as string)
+POST {{host}}/api/articles
+Content-Type: application/json
+
+{ "name": "X", "description": "Y", "price": "17.89", "currency": "NOK" }
+
+### 5. Expecting 400 (article_id in POST)
+POST {{host}}/api/articles
+Content-Type: application/json
+
+{ "article_id": 5, "name": "X", "description": "Y", "price": 0 }
+
+### 6. Expecting 200
+GET {{host}}/api/articles/1
+
+### 7. Expecting 404
+GET {{host}}/api/articles/4
+
+### 8. Expecting 2 articles
+GET {{host}}/api/articles?name=branded
+
+### 9. Expecting 1 article
+GET {{host}}/api/articles?category=USB%20flash%20drive
+
+### 10. Expecting []
+GET {{host}}/api/articles?name=256%20GB
+
+### Articles-concurrent
+
+POST {{host}}/api/articles-concurrent
+Content-Type: application/json
+
+[
+  {
+    "name": "Branded Memory Stick",
+    "description": "Branded 16 GB memory stick",
+    "category": "USB flash drive",
+    "price": 17.89,
+    "currency": "NOK"
+  },
+  {
+    "name": "Branded Drinking Mug",
+    "description": "Porcelain drinking cup with your logo on it.",
+    "category": "Mug",
+    "price": 0
+  }
+]
+
+### Update article
+
+PUT {{host}}/api/articles/1
+Content-Type: application/json
+
+{
+  "name": "Branded Memory Stick",
+  "description": "Branded 256 GB memory stick",
+  "category": "USB flash drive",
+  "price": 31.89,
+  "currency": "NOK"
+}
+
+### Update article with If-Match (Concurrency check)
+
+PUT {{host}}/api/articles/1
+Content-Type: application/json
+If-Match: "4"
+
+{
+  "name": "Branded Memory Stick",
+  "description": "Branded 256 GB memory stick",
+  "category": "USB flash drive",
+  "price": 31.89,
+  "currency": "NOK"
+}
